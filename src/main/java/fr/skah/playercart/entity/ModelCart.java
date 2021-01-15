@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 
 public class ModelCart extends ModelBase {
 
+    private final ModelRenderer whellback;
+    private final ModelRenderer whellforward;
     private final ModelRenderer bone;
 
     public ModelCart() {
@@ -14,7 +16,7 @@ public class ModelCart extends ModelBase {
         textureHeight = 256;
 
         bone = new ModelRenderer(this);
-        bone.setRotationPoint(31.0F, 24.0F, 0.0F);
+        bone.setRotationPoint(+31.0F, 24.0F, 0.0F);
         bone.cubeList.add(new ModelBox(bone, 0, 72, -33.0F, -9.5F, -17.6688F, 1, 1, 36, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 110, 52, -69.0F, -9.5F, 7.8312F, 37, 1, 3, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 0, 12, -69.0F, -9.9F, -11.6688F, 2, 1, 4, 0.0F, false));
@@ -54,27 +56,25 @@ public class ModelCart extends ModelBase {
         bone.cubeList.add(new ModelBox(bone, 20, 9, -1.0F, -10.2F, -15.0F, 3, 1, 30, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 30, 122, 13.0F, -13.2F, -16.0F, 3, 1, 32, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 150, 0, 15.0F, -14.5F, -14.7F, 1, 2, 30, 0.0F, false));
-        bone.cubeList.add(new ModelBox(bone, 106, 141, -1.5F, -17.0F, 17.0F, 17, 17, 0, 0.0F, false));
-        bone.cubeList.add(new ModelBox(bone, 106, 141, -39.8F, -17.0F, 17.0F, 17, 17, 0, 0.0F, false));
-        bone.cubeList.add(new ModelBox(bone, 106, 141, -1.5F, -17.0F, -17.0F, 17, 17, 0, 0.0F, false));
-        bone.cubeList.add(new ModelBox(bone, 106, 141, -39.8F, -17.0F, -17.0F, 17, 17, 0, 0.0F, false));
+
+        whellback = new ModelRenderer(this);
+        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 29.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
+        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 29.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
+
+
+        whellforward = new ModelRenderer(this);
+        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -9.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
+        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -9.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
+
+
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
-        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale, entity);
-        this.bone.render(scale);
-    }
-
-
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
-
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+        bone.render(scale);
+        whellforward.render(scale);
+        whellback.render(scale);
     }
 
 }
