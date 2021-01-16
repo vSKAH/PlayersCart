@@ -26,11 +26,11 @@ public class RenderCart extends Render<EntityCart> {
     public void doRender(EntityCart entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
         GL11.glPushMatrix();
-        GlStateManager.translate(x, y + 2.4D, z);
+        GlStateManager.translate(x, y + 1.7D, z);
         GlStateManager.rotate(270 - entityYaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         this.bindEntityTexture(entity);
-        MODEL.render(entity, partialTicks, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F);
+        MODEL.render(entity, partialTicks, 0.0F, 0.0F, 0.0F, 0.0F, 0.07F);
         GL11.glPopMatrix();
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }

@@ -23,7 +23,7 @@ import java.util.UUID;
 public class EntityCart extends Entity {
 
     //Entity distance maintened between the cart and the entity pull. (ex : 2 = 2Blocks, 3.2F = 3,2 Blocks)
-    private static final float ENTITY_SPACING = 3.5F;
+    private static final float ENTITY_SPACING = 3.0F;
     //Current entity pulling, is cart is not pulled this var equals null
     private Entity entityPulling;
     //Location of cart passenger.
@@ -32,7 +32,7 @@ public class EntityCart extends Entity {
     public EntityCart(World worldIn) {
         super(worldIn);
         this.stepHeight = 2.0F;
-        this.setSize(4.0F, 3.5F);
+        this.setSize(4.0F, 2.2F);
     }
 
     @Override
@@ -151,22 +151,22 @@ public class EntityCart extends Entity {
                     entityPositions.put(this.getPassengers().get(0).getUniqueID(), "0.8:0.0");
                     break;
                 case 2:
-                    entityPositions.put(this.getPassengers().get(1).getUniqueID(), "-1.0:-1.0");
+                    entityPositions.put(this.getPassengers().get(1).getUniqueID(), "-0.2:-0.8");
                     break;
                 case 3:
-                    entityPositions.put(this.getPassengers().get(2).getUniqueID(), "-1.10:1.0");
+                    entityPositions.put(this.getPassengers().get(2).getUniqueID(), "-0.2:0.8");
                     break;
                 case 4:
-                    entityPositions.put(this.getPassengers().get(3).getUniqueID(), "-2.10:-1.0");
+                    entityPositions.put(this.getPassengers().get(3).getUniqueID(), "-1.0:-0.8");
                     break;
                 case 5:
-                    entityPositions.put(this.getPassengers().get(4).getUniqueID(), "-2.10:1.0");
+                    entityPositions.put(this.getPassengers().get(4).getUniqueID(), "-1.0:0.8");
                     break;
                 case 6:
-                    entityPositions.put(this.getPassengers().get(5).getUniqueID(), "-3.50:1.0");
+                    entityPositions.put(this.getPassengers().get(5).getUniqueID(), "-2.0:0.8");
                     break;
                 case 7:
-                    entityPositions.put(this.getPassengers().get(6).getUniqueID(), "-3.50:-1.0");
+                    entityPositions.put(this.getPassengers().get(6).getUniqueID(), "-2.0:-0.8");
                     break;
                 default:
                     break;
@@ -181,7 +181,7 @@ public class EntityCart extends Entity {
                 //vec3d is used for the passenger keep the same positions depending on the orientation of the cart
                 final Vec3d vec3d = new Vec3d(xln, 0.0D, zln).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
                 //set position of passenger (passenger = player on cart)
-                passenger.setPosition(this.posX + vec3d.x, this.posY + 1.5, this.posZ + vec3d.z);
+                passenger.setPosition(this.posX + vec3d.x, this.posY + 0.8f, this.posZ + vec3d.z);
             }
         }
     }

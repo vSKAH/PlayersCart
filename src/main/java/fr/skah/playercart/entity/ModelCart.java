@@ -16,7 +16,7 @@ public class ModelCart extends ModelBase {
         textureHeight = 256;
 
         bone = new ModelRenderer(this);
-        bone.setRotationPoint(+31.0F, 24.0F, 0.0F);
+        bone.setRotationPoint(+25.0F, 24.0F, 0.0F);
         bone.cubeList.add(new ModelBox(bone, 0, 72, -33.0F, -9.5F, -17.6688F, 1, 1, 36, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 110, 52, -69.0F, -9.5F, 7.8312F, 37, 1, 3, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 0, 12, -69.0F, -9.9F, -11.6688F, 2, 1, 4, 0.0F, false));
@@ -57,15 +57,13 @@ public class ModelCart extends ModelBase {
         bone.cubeList.add(new ModelBox(bone, 30, 122, 13.0F, -13.2F, -16.0F, 3, 1, 32, 0.0F, false));
         bone.cubeList.add(new ModelBox(bone, 150, 0, 15.0F, -14.5F, -14.7F, 1, 2, 30, 0.0F, false));
 
-        whellback = new ModelRenderer(this);
-        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 29.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
-        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 29.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
-
-
         whellforward = new ModelRenderer(this);
-        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -9.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
-        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -9.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
+        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -16.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
+        whellforward.cubeList.add(new ModelBox(whellforward, 106, 141, -16.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
 
+        whellback = new ModelRenderer(this);
+        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 22.0F, 7.0F, 17.0F, 17, 17, 0, 0.0F, false));
+        whellback.cubeList.add(new ModelBox(whellback, 106, 141, 22.0F, 7.0F, -17.0F, 17, 17, 0, 0.0F, false));
 
     }
 
