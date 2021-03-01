@@ -97,7 +97,6 @@ public class EntityCart extends Entity {
 
             //If player is sneak and entityPulling is not null set entityPulling to null.
             entityPulling = null;
-
             return true;
         }
         //Check if server side is not equals to client. and chech if current player is not a passenger of this cart and check if player is not on another entity
@@ -187,6 +186,7 @@ public class EntityCart extends Entity {
     }
 
     private void setSpeed(EntityHorse horse, double speed) {
+        if(horse == null) return;
         IAttributeInstance iAttributeInstance = horse.getAttributeMap().getAttributeInstanceByName("generic.movementSpeed");
         iAttributeInstance.getModifiers().clear();
         iAttributeInstance.applyModifier(new AttributeModifier("generic.movementSpeed", speed, 1).setSaved(true));
