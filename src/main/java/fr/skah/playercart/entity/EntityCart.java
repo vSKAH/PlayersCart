@@ -13,6 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,13 @@ public class EntityCart extends Entity {
     //Location of cart passenger.
     private final ArrayList<String> entityPositions = new ArrayList<>();
 
+
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYaw;
+
     public EntityCart(World worldIn) {
         super(worldIn);
         this.stepHeight = 2.0F;
@@ -44,6 +53,7 @@ public class EntityCart extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        this.tickLerp();
 
         if (!this.hasNoGravity()) this.motionY -= 0.04D;
         if (this.entityPulling == null) return;
@@ -201,6 +211,46 @@ public class EntityCart extends Entity {
         entityPositions.add("-1.0:-0.8");
         entityPositions.add("-2.0:0.8");
         entityPositions.add("-2.0:-0.8");
+    }
+
+    private void tickLerp()
+    {
+        if (this.lerpSteps > 0)
+        {
+            double dx = this.posX + (this.lerpX - this.posX) / this.lerpSteps;
+            double dy = this.posY + (this.lerpY - this.posY) / this.lerpSteps;
+            double dz = this.posZ + (this.lerpZ - this.posZ) / this.lerpSteps;
+            double drot = MathHelper.wrapDegrees(this.lerpYaw - this.rotationYaw);
+            this.rotationYaw = (float)(this.rotationYaw + drot / this.lerpSteps);
+            --this.lerpSteps;
+            this.setPosition(dx, dy, dz);
+            this.setRotation(this.rotationYaw, this.rotationPitch);
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
+    {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYaw = yaw;
+        this.lerpSteps = 10;
+    }
+
+    @Override
+    protected void addPassenger(Entity passenger)
+    {
+        super.addPassenger(passenger);
+        if (this.canPassengerSteer() && this.lerpSteps > 0)
+        {
+            this.lerpSteps = 0;
+            this.posX = this.lerpX;
+            this.posY = this.lerpY;
+            this.posZ = this.lerpZ;
+            this.rotationYaw = (float)this.lerpYaw;
+        }
     }
 
     @Override
