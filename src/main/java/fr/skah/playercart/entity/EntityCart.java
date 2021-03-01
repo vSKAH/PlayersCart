@@ -3,6 +3,8 @@ package fr.skah.playercart.entity;
 import fr.skah.playercart.item.Items;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 //Cart = Charrette
@@ -25,9 +26,10 @@ public class EntityCart extends Entity {
     //Entity distance maintened between the cart and the entity pull. (ex : 2 = 2Blocks, 3.2F = 3,2 Blocks)
     private static final float ENTITY_SPACING = 3.0F;
     //Current entity pulling, is cart is not pulled this var equals null
-    private Entity entityPulling;
+    private EntityHorse entityPulling;
+
     //Location of cart passenger.
-    private final HashMap<UUID, String> entityPositions = new HashMap<>();
+    private final ArrayList<String> entityPositions = new ArrayList<>();
 
     public EntityCart(World worldIn) {
         super(worldIn);
@@ -59,13 +61,16 @@ public class EntityCart extends Entity {
 
         this.move(MoverType.PLAYER, moveX, this.entityPulling.motionY - 1, moveZ);
         /* End of the lines that manage the movement of the cart */
+
     }
+
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         //Check if player is sneak.
         if (player.isSneaking()) {
             //if player is sneak and entity pulling equals null
+
             if (entityPulling == null) {
                 //create list of all horse around in 5 blocks
                 final List<EntityHorse> horseNear = player.getEntityWorld().getEntitiesWithinAABB(EntityHorse.class, new AxisAlignedBB(this.posX - 5, this.posY - 5, this.posZ - 5, this.posX + 5, this.posY + 5, this.posZ + 5));
@@ -73,21 +78,32 @@ public class EntityCart extends Entity {
                 if (!horseNear.isEmpty()) {
                     //get first horse of the list
                     final EntityHorse horse = horseNear.get(0);
+
+                    //change the speed of horse
+                    horse.setAIMoveSpeed(0.0f);
+                    this.setSpeed(horse, -0.49999998807D);
+
                     //teleport cart to horse
                     this.setPositionAndUpdate(horse.posX, horse.posY, horse.posZ);
                     //var entityPulling = horse
                     this.entityPulling = horse;
                     return true;
                 }
+                return true;
             }
+
+            //Reset Horse speed
+            this.setSpeed(entityPulling, +0.49999998807D);
+
             //If player is sneak and entityPulling is not null set entityPulling to null.
             entityPulling = null;
+
             return true;
         }
         //Check if server side is not equals to client. and chech if current player is not a passenger of this cart and check if player is not on another entity
-        if (!this.world.isRemote && !player.isPassenger(this) && player.getRidingEntity() == null) {
+        if (!player.world.isRemote && !player.isPassenger(this) && player.getRidingEntity() == null) {
             //player ride cart
-            player.startRiding(this);
+            player.startRiding(this, true);
             return true;
         }
 
@@ -116,6 +132,7 @@ public class EntityCart extends Entity {
             //depop cart
             this.setDead();
             this.dropItem(Items.ITEM_CART, 1);
+            this.setSpeed(entityPulling, +0.49999998807D);
             return true;
 
         }
@@ -143,47 +160,47 @@ public class EntityCart extends Entity {
     }
 
     @Override
+    protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        passenger.setPosition(this.posX, this.posY, this.posZ);
+    }
+
+    @Override
     public void updatePassenger(Entity passenger) {
-        if (this.isPassenger(passenger)) {
-            //Define the pos of the passenger
-            switch (this.getPassengers().size()) {
-                case 1:
-                    entityPositions.put(this.getPassengers().get(0).getUniqueID(), "0.8:0.0");
-                    break;
-                case 2:
-                    entityPositions.put(this.getPassengers().get(1).getUniqueID(), "-0.2:-0.8");
-                    break;
-                case 3:
-                    entityPositions.put(this.getPassengers().get(2).getUniqueID(), "-0.2:0.8");
-                    break;
-                case 4:
-                    entityPositions.put(this.getPassengers().get(3).getUniqueID(), "-1.0:-0.8");
-                    break;
-                case 5:
-                    entityPositions.put(this.getPassengers().get(4).getUniqueID(), "-1.0:0.8");
-                    break;
-                case 6:
-                    entityPositions.put(this.getPassengers().get(5).getUniqueID(), "-2.0:0.8");
-                    break;
-                case 7:
-                    entityPositions.put(this.getPassengers().get(6).getUniqueID(), "-2.0:-0.8");
-                    break;
-                default:
-                    break;
-            }
-            //ckech if entityPossition contains the UUID of the passenger
-            if (entityPositions.get(passenger.getUniqueID()) != null) {
-                //Split
-                final String[] positions = entityPositions.get(passenger.getUniqueID()).split(":");
-                //Parse to double (convert string (string = text) to double)
-                final double xln = Double.parseDouble(positions[0]);
-                final double zln = Double.parseDouble(positions[1]);
-                //vec3d is used for the passenger keep the same positions depending on the orientation of the cart
-                final Vec3d vec3d = new Vec3d(xln, 0.0D, zln).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
-                //set position of passenger (passenger = player on cart)
-                passenger.setPosition(this.posX + vec3d.x, this.posY + 0.8f, this.posZ + vec3d.z);
-            }
+        setPos();
+
+        int i = 0;
+        for (Entity entity : this.getPassengers()) {
+            EntityPlayer player = (EntityPlayer) entity;
+
+            //Split
+            final String[] positions = entityPositions.get(i).split(":");
+            //Parse to double (convert string (string = text) to double)
+            final double xln = Double.parseDouble(positions[0]);
+            final double zln = Double.parseDouble(positions[1]);
+            //vec3d is used for the passenger keep the same positions depending on the orientation of the cart
+            final Vec3d vec3d = new Vec3d(xln, 0.0D, zln).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
+            //set position of passenger (passenger = player on cart)
+            player.setPosition(this.posX + vec3d.x, this.posY + 0.8f, this.posZ + vec3d.z);
+            i++;
         }
+    }
+
+    private void setSpeed(EntityHorse horse, double speed) {
+        IAttributeInstance iAttributeInstance = horse.getAttributeMap().getAttributeInstanceByName("generic.movementSpeed");
+        iAttributeInstance.getModifiers().clear();
+        iAttributeInstance.applyModifier(new AttributeModifier("generic.movementSpeed", speed, 1).setSaved(true));
+    }
+
+    private void setPos() {
+        entityPositions.clear();
+        entityPositions.add("0.8:0.0");
+        entityPositions.add("-0.2:0.8");
+        entityPositions.add("-0.2:-0.8");
+        entityPositions.add("-1.0:0.8");
+        entityPositions.add("-1.0:-0.8");
+        entityPositions.add("-2.0:0.8");
+        entityPositions.add("-2.0:-0.8");
     }
 
     @Override

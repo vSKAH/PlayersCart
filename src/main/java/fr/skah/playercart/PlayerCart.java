@@ -35,7 +35,7 @@ public class PlayerCart {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "cart"), EntityCart.class, "cart", 420, instance, 80, 1, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "cart"), EntityCart.class, "cart", 420, instance, 85, 1, true);
     }
 
 
