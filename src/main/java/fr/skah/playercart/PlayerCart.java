@@ -16,31 +16,25 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = PlayerCart.MODID, name = PlayerCart.NAME, version = PlayerCart.VERSION)
 public class PlayerCart {
+
     public static final String MODID = "playercart";
     public static final String NAME = "Player Cart";
     public static final String VERSION = "0.1";
 
     @Mod.Instance("playercart")
     private static PlayerCart instance;
+
     @SidedProxy(clientSide = "fr.skah.playercart.proxy.ClientProxy", serverSide = "fr.skah.playercart.proxy.ServerProxy")
     private static ServerProxy proxy;
-    private static Logger logger;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
         proxy.registerRender();
         MinecraftForge.EVENT_BUS.register(new Items());
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "cart"), EntityCart.class, "cart", 420, instance, 85, 1, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "cart"), EntityCart.class, "cart", 420, instance, 80, 1, false);
     }
-
-
-    public static Logger getLogger() {
-        return logger;
-    }
-
 }
