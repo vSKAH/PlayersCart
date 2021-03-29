@@ -17,12 +17,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-import java.util.UUID;
 
 public class EntityCart extends Entity {
 
     //Entity distance maintened between the cart and the entity pull. (ex : 2 = 2Blocks, 3.2F = 3,2 Blocks)
-    private static final float ENTITY_SPACING = 3.0F;
+    private static final float ENTITY_SPACING = 2.0F;
 
     protected Entity pulling;
 
@@ -38,7 +37,7 @@ public class EntityCart extends Entity {
     public EntityCart(World worldIn) {
         super(worldIn);
         this.preventEntitySpawning = true;
-        this.stepHeight = 0.6F;
+        this.stepHeight = 1.8F;
         this.setSize(4.0F, 2.2F);
 
     }
