@@ -34,11 +34,14 @@ public class ItemCart extends Item {
 
         if (!world.isRemote && result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
             final EntityCart cart = new EntityCart(world);
+            final ItemStack itemStack = player.getHeldItem(hand);
+            itemStack.shrink(1);
+            player.inventory.markDirty();
             cart.setPositionAndUpdate(result.hitVec.x, result.hitVec.y, result.hitVec.z);
             world.spawnEntity(cart);
-            return new ActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
         }
-        return new ActionResult(EnumActionResult.FAIL, player.getHeldItem(hand));
+        return new ActionResult<>(EnumActionResult.FAIL, player.getHeldItem(hand));
     }
 
 }
