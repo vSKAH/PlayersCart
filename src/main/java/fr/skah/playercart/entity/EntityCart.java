@@ -265,6 +265,13 @@ public class EntityCart extends Entity {
         }
     }
 
+
+    @Override
+    protected void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+        this.rotationYaw = (float) this.clientYaw;
+    }
+
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         this.clientX = x;
