@@ -248,7 +248,7 @@ public class EntityCart extends Entity {
         }
 
         Vec3d vec3d = (new Vec3d(front, height, side)).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
-        passenger.setPosition(this.posX + vec3d.x, this.posY + vec3d.y, this.posZ + vec3d.z);
+        passenger.setPositionAndRotation(this.posX + vec3d.x, this.posY + vec3d.y, this.posZ + vec3d.z, passenger.rotationYaw, passenger.rotationPitch);
     }
 
     private void tickLerp() {
@@ -258,10 +258,9 @@ public class EntityCart extends Entity {
             double z = posZ + (clientZ - posZ) / (double) steps;
             double d3 = MathHelper.wrapDegrees(clientYaw - (double) rotationYaw);
             this.rotationYaw = (float) ((double) rotationYaw + d3 / (double) steps);
-            this.rotationPitch = (float) ((double) rotationPitch + (clientPitch - (double) rotationPitch) / (double) steps);
             steps--;
             setPosition(x, y, z);
-            setRotation(rotationYaw, rotationPitch);
+            setRotation(this.rotationYaw, this.rotationPitch);
         }
     }
 
@@ -277,6 +276,7 @@ public class EntityCart extends Entity {
         this.clientX = x;
         this.clientY = y;
         this.clientZ = z;
+        this.clientYaw = yaw;
         this.steps = 10;
     }
 
