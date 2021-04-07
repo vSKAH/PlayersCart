@@ -248,7 +248,8 @@ public class EntityCart extends Entity {
         }
 
         Vec3d vec3d = (new Vec3d(front, height, side)).rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
-        passenger.setPositionAndRotation(this.posX + vec3d.x, this.posY + vec3d.y, this.posZ + vec3d.z, passenger.rotationYaw, passenger.rotationPitch);
+        passenger.setPosition(this.posX + vec3d.x, this.posY + vec3d.y, this.posZ + vec3d.z);
+        passenger.setRotationYawHead(passenger.rotationYaw);
     }
 
     private void tickLerp() {
